@@ -1,6 +1,6 @@
 # skills
 
-A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specification) for blog writing workflows.
+A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specification) for blog writing and technical documentation workflows.
 
 **日本語**: [README.ja.md](./README.ja.md)
 
@@ -16,6 +16,7 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 | `skills/textlint-blog` | Run textlint on blog Markdown |
 | `skills/textlint-setup` | Install and configure textlint |
 | `skills/zenn-blog-writing` | Zenn technical blog writing guide |
+| `skills/documentation-writing` | Project technical documentation (README, guides, ADR) |
 
 ## Install (from GitHub)
 

@@ -1,6 +1,6 @@
 # Agent Instructions
 
-このリポジトリは、ブログ執筆まわりの [Agent Skills](https://agentskills.io/specification) を GitHub 経由で配布するためのカタログです。`gh skill publish` で公開し、利用者は `gh skill install` で各エージェントに導入します。
+このリポジトリは、ブログ執筆・技術ドキュメント向けの [Agent Skills](https://agentskills.io/specification) を GitHub 経由で配布するためのカタログです。`gh skill publish` で公開し、利用者は `gh skill install` で各エージェントに導入します。
 
 ## リポジトリ構成
 
@@ -25,6 +25,7 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 | `textlint-blog` | ブログ Markdown の textlint 実行 |
 | `textlint-setup` | textlint のインストール・設定 |
 | `zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
+| `documentation-writing` | プロジェクト技術ドキュメント執筆 |
 
 ## スキル執筆ルール（メンテナ向け）
 

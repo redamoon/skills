@@ -83,7 +83,8 @@ license: MIT
 
 - 見出しは h2（`##`）から始め、h2 と h3（`###`）のみを使う（h1 は使わない）
 - 段落ごとに空行を入れる
-- 既存の [blog-platform-rules](.cursor/rules/blog-platform-rules.mdc) の note セクションに従う
+- テーブル記法は使わない（note では非対応）
+- はてなブログ固有記法（`[:contents]`、フォトライフ記法など）は使わない
 
 ---
 

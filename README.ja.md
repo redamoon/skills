@@ -1,6 +1,6 @@
 # skills
 
-個人用の [Agent Skills](https://agentskills.io/specification) を Git で管理するリポジトリです（ブログ執筆まわり）。
+個人用の [Agent Skills](https://agentskills.io/specification) を Git で管理するリポジトリです（ブログ執筆・技術ドキュメント）。
 
 **English**: [README.md](./README.md)
 
@@ -16,6 +16,7 @@
 | `skills/textlint-blog` | ブログ Markdown の textlint 実行 |
 | `skills/textlint-setup` | textlint のインストール・設定 |
 | `skills/zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
+| `skills/documentation-writing` | プロジェクト技術ドキュメント（README、手順書、ADR など） |
 
 ## インストール（GitHub から）
 
