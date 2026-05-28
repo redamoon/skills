@@ -1,0 +1,6 @@
+# ベンチマーク・評価用（skill-creator 等で生成）
+*-workspace/
+evals/
+
+# OS
+.DS_Store
