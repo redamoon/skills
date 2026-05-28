@@ -1,55 +1,57 @@
 # skills
 
-個人用の Agent Skills を Git で管理するリポジトリです。
+A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specification) for blog writing workflows.
 
-## 含まれるスキル（執筆まわり）
+**日本語**: [README.ja.md](./README.ja.md)
 
-| ディレクトリ | 用途 |
-|-------------|------|
-| `skills/blog-workflow` | ブログ記事の品質チェック（textlint・プラットフォーム別確認・レビュー） |
-| `skills/hatena-blog-markdown` | はてなブログ Markdown 記法 |
-| `skills/hatena-syntax-highlight` | はてなブログのコードハイライト記法 |
-| `skills/note-book-reading-memo` | note 向けビジネス・技術書の読書メモ |
-| `skills/note-novel-reading-memo` | note 向け小説の読書メモ |
-| `skills/textlint-blog` | ブログ Markdown の textlint 実行 |
-| `skills/textlint-setup` | textlint のインストール・設定 |
-| `skills/zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
+## Skills (writing)
 
-## インストール（GitHub から）
+| Directory | Purpose |
+|-----------|---------|
+| `skills/blog-workflow` | End-to-end blog quality checks (textlint, platform formatting, reader review) |
+| `skills/hatena-blog-markdown` | Hatena Blog Markdown conventions |
+| `skills/hatena-syntax-highlight` | Hatena Blog code block syntax highlighting |
+| `skills/note-book-reading-memo` | note reading notes for business and technical books |
+| `skills/note-novel-reading-memo` | note reading notes for fiction |
+| `skills/textlint-blog` | Run textlint on blog Markdown |
+| `skills/textlint-setup` | Install and configure textlint |
+| `skills/zenn-blog-writing` | Zenn technical blog writing guide |
 
-[Agent Skills](https://agentskills.io/specification) 対応エージェント向けに [GitHub CLI の `gh skill`](https://cli.github.com/manual/gh_skill_install) でインストールできます。
+## Install (from GitHub)
+
+Install with [GitHub CLI `gh skill`](https://cli.github.com/manual/gh_skill_install):
 
 ```bash
-# リポジトリ内のスキルを対話的に選択
+# Pick skills interactively from the repository
 gh skill install redamoon/skills
 
-# 特定スキル（例: Cursor）
+# Install one skill (example: Cursor)
 gh skill install redamoon/skills zenn-blog-writing --agent cursor
 
-# バージョン固定（推奨）
+# Pin a release tag (recommended)
 gh skill install redamoon/skills blog-workflow --agent cursor --pin v1.0.0
 ```
 
-手動で置く場合:
+Manual install:
 
 ```bash
 ln -s "$(pwd)/skills/zenn-blog-writing" ~/.cursor/skills/zenn-blog-writing
 ln -s "$(pwd)/skills/zenn-blog-writing" ~/.claude/skills/zenn-blog-writing
 ```
 
-## 公開（メンテナ）
+## Publish (maintainers)
 
 ```bash
-gh skill publish --dry-run   # 検証
-gh skill publish             # リリース作成
+gh skill publish --dry-run   # validate only
+gh skill publish             # create a release
 ```
 
-詳細は [AGENTS.md](./AGENTS.md) を参照してください。
+See [AGENTS.md](./AGENTS.md) for repository conventions.
 
-## ライセンス
+## License
 
-リポジトリ全体は [MIT License](./LICENSE) です。各スキルの `SKILL.md` frontmatter にも `license: MIT` を記載しています。
+This repository is [MIT](./LICENSE). Each skill declares `license: MIT` in `SKILL.md` frontmatter.
 
-## 除外
+## Ignored paths
 
-`*-workspace/` と `evals/` は skill のベンチマーク・評価用のため `.gitignore` で除外しています。
+`*-workspace/` and `evals/` are benchmark artifacts and excluded via `.gitignore`.
