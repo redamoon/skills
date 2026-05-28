@@ -23,14 +23,44 @@
 [GitHub CLI の `gh skill`](https://cli.github.com/manual/gh_skill_install) でインストールできます。
 
 ```bash
-# リポジトリ内のスキルを対話的に選択
-gh skill install redamoon/skills
-
-# 特定スキル（例: Cursor）
-gh skill install redamoon/skills zenn-blog-writing --agent cursor
+# 特定スキル（例: Cursor、ユーザー全体）
+gh skill install redamoon/skills zenn-blog-writing --agent cursor --scope user
 
 # バージョン固定（推奨）
-gh skill install redamoon/skills blog-workflow --agent cursor --pin v1.0.0
+gh skill install redamoon/skills blog-workflow --agent cursor --scope user --pin v1.0.0
+```
+
+### 対話式のエージェント選択を避ける（ターミナルで見切れる場合）
+
+`gh skill install` だけ実行すると、リポジトリ・スキル・**エージェント**を順に聞かれます。エージェント一覧が長く、ターミナルから見切れることがあります。
+
+フラグをすべて指定するとプロンプトを省略できます。
+
+```bash
+gh skill install redamoon/skills documentation-writing \
+  --agent cursor \
+  --scope user \
+  --pin v1.0.0
+```
+
+| フラグ | よく使う値 |
+|--------|------------|
+| `--agent` | `cursor`, `claude-code`, `codex`, `github-copilot` |
+| `--scope` | `user`（全体）または `project`（現在のリポジトリ） |
+| `--pin` | `v1.0.0` やコミット SHA |
+
+エージェント選択をスキップしてパスを直接指定する場合:
+
+```bash
+gh skill install redamoon/skills documentation-writing \
+  --dir ~/.cursor/skills/documentation-writing \
+  --pin v1.0.0
+```
+
+ローカルクローンから入れる場合:
+
+```bash
+gh skill install . documentation-writing --from-local --agent cursor --scope user
 ```
 
 手動で置く場合:

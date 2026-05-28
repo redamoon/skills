@@ -23,14 +23,44 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 Install with [GitHub CLI `gh skill`](https://cli.github.com/manual/gh_skill_install):
 
 ```bash
-# Pick skills interactively from the repository
-gh skill install redamoon/skills
-
-# Install one skill (example: Cursor)
-gh skill install redamoon/skills zenn-blog-writing --agent cursor
+# Install one skill (example: Cursor, user scope)
+gh skill install redamoon/skills zenn-blog-writing --agent cursor --scope user
 
 # Pin a release tag (recommended)
-gh skill install redamoon/skills blog-workflow --agent cursor --pin v1.0.0
+gh skill install redamoon/skills blog-workflow --agent cursor --scope user --pin v1.0.0
+```
+
+### Avoid interactive agent picker (long terminal list)
+
+Running `gh skill install` without flags opens prompts for repository, skill, and **agent**. The agent list is long and may not fit in the terminal.
+
+Pass everything on the command line so prompts are skipped:
+
+```bash
+gh skill install redamoon/skills documentation-writing \
+  --agent cursor \
+  --scope user \
+  --pin v1.0.0
+```
+
+| Flag | Common values |
+|------|----------------|
+| `--agent` | `cursor`, `claude-code`, `codex`, `github-copilot` |
+| `--scope` | `user` (global) or `project` (current repo) |
+| `--pin` | `v1.0.0` or a commit SHA |
+
+Install to a known path without choosing an agent:
+
+```bash
+gh skill install redamoon/skills documentation-writing \
+  --dir ~/.cursor/skills/documentation-writing \
+  --pin v1.0.0
+```
+
+From a local clone:
+
+```bash
+gh skill install . documentation-writing --from-local --agent cursor --scope user
 ```
 
 Manual install:
