@@ -16,6 +16,7 @@
 | `skills/textlint-blog` | ブログ Markdown の textlint 実行 |
 | `skills/textlint-setup` | textlint のインストール・設定 |
 | `skills/zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
+| `skills/x-post-writing` | X 向けポスト文案の作成・推敲（For You / x-algorithm 準拠） |
 | `skills/documentation-writing` | プロジェクト技術ドキュメント（README、手順書、ADR など） |
 
 ## インストール（GitHub から）

@@ -25,6 +25,7 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 | `textlint-blog` | ブログ Markdown の textlint 実行 |
 | `textlint-setup` | textlint のインストール・設定 |
 | `zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
+| `x-post-writing` | X 向けポスト文案の作成・推敲（For You / x-algorithm 準拠） |
 | `documentation-writing` | プロジェクト技術ドキュメント執筆 |
 
 ## スキル執筆ルール（メンテナ向け）

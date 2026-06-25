@@ -16,6 +16,7 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 | `skills/textlint-blog` | Run textlint on blog Markdown |
 | `skills/textlint-setup` | Install and configure textlint |
 | `skills/zenn-blog-writing` | Zenn technical blog writing guide |
+| `skills/x-post-writing` | X post copywriting for For You feed (x-algorithm) |
 | `skills/documentation-writing` | Project technical documentation (README, guides, ADR) |
 
 ## Install (from GitHub)
