@@ -17,7 +17,7 @@ AGENTS.md にルールを書いておけばかなり減る。
 みなさんの AGENTS.md、何を書いてますか？
 ```
 
-**設計メモ**: reply（質問）、click（URL）、quote（冒頭2行）、dwell（具体例）
+**設計メモ**: reply（質問）、quote（冒頭2行）、follow_author（実運用の一貫性）、open_link（URL は減点ではない。本文だけで価値が伝わる）
 
 ---
 
@@ -46,7 +46,7 @@ AGENTS.md にルールを書いておけばかなり減る。
 5/ レガシーコードと戦ってる人、最初の1変更は何にしましたか？
 ```
 
-**設計メモ**: quote（1/ が独立）、reply（5/）、dwell（手順・実例）、repost（共感）
+**設計メモ**: quote（1/ が独立）、reply（5/ の問い。相互フォローが返せる）、share_via_copy_link（手順が外へ持ち出せる）、follow_author（実例の一貫性）
 
 ---
 
@@ -64,7 +64,7 @@ AGENTS.md にルールを書いておけばかなり減る。
 同意しますか？ それとも違いますか？
 ```
 
-**設計メモ**: reply（二択質問）、quote（1行目）、favorite（共感）
+**設計メモ**: reply（二択。相互フォローが返しやすい）、quote（1行目）、favorite は副産物
 
 ---
 
@@ -78,7 +78,7 @@ AI エージェント プロンプト エンジニアリング Cursor Claude
 いいね・RT よろしく 🙏
 ```
 
-**理由**: スパム的、キーワード羅列、明示的ベイト → P(not_interested) / VFFilter リスク
+**理由**: スパム的、キーワード羅列、明示的ベイト → P(not_interested) / mute / report と visibility-filtering のリスク。favorite 狙いの拡散希望は重み的にも弱い
 
 **改善案**:
 ```
