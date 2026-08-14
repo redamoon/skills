@@ -27,7 +27,7 @@ posted_at: ""
 
 ## 設計メモ
 
-- 狙うアクション:
+- 狙うアクション:  # 例: reply, quote, share_via_copy_link, follow_author
 - 切り口:
 - 根拠:
 
