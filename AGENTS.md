@@ -29,7 +29,7 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 | `documentation-writing` | プロジェクト技術ドキュメント執筆 |
 | `japanese-prose-revision` | 編集者水準の日本語推敲規範（論証・冗長・LLM っぽい表現） |
 | `cognitive-rhythm-writing` | 日本語の説明文の緩急（認知リズム）設計 |
-| `ux-thinking` | ユーザーの仕事から UX を設計・診断する（導線、摩擦、状態、コピー） |
+| `ux-thinking` | ワイヤー前の質問で仕様を固める（仕事定義、画面の役割、摩擦、状態、コピー） |
 
 ## スキル執筆ルール（メンテナ向け）
 

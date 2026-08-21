@@ -25,7 +25,7 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 
 | Directory | Purpose |
 |-----------|---------|
-| `skills/ux-thinking` | Design and diagnose UX from the user's job: journeys, friction, states, and copy |
+| `skills/ux-thinking` | Lock UX spec before wires: job definition, screen roles, friction, states, copy |
 
 ## Install (from GitHub)
 
