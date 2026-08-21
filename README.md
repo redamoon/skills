@@ -8,7 +8,7 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 
 | Directory | Purpose |
 |-----------|---------|
-| `skills/blog-workflow` | End-to-end blog quality checks (textlint, platform formatting, reader review) |
+| `skills/blog-workflow` | End-to-end blog workflow: writer / reader / editor subagent loop, then textlint and platform formatting |
 | `skills/hatena-blog-markdown` | Hatena Blog Markdown conventions |
 | `skills/hatena-syntax-highlight` | Hatena Blog code block syntax highlighting |
 | `skills/note-book-reading-memo` | note reading notes for business and technical books |

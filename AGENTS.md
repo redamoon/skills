@@ -17,7 +17,7 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 
 | スキル | 用途 |
 |--------|------|
-| `blog-workflow` | ブログ記事の品質チェック一括（textlint・プラットフォーム別・読者レビュー） |
+| `blog-workflow` | ブログ記事の執筆〜仕上げ（3モードのサブエージェント周回 → textlint・プラットフォーム別確認） |
 | `hatena-blog-markdown` | はてなブログ Markdown 記法 |
 | `hatena-syntax-highlight` | はてなブログのコードシンタックスハイライト |
 | `note-book-reading-memo` | note 向けビジネス・技術書の読書メモ |

@@ -8,7 +8,7 @@
 
 | ディレクトリ | 用途 |
 |-------------|------|
-| `skills/blog-workflow` | ブログ記事の品質チェック（textlint・プラットフォーム別確認・レビュー） |
+| `skills/blog-workflow` | ブログ記事の執筆〜仕上げ（執筆・読者・編集者モードのサブエージェント周回 → textlint・プラットフォーム別確認） |
 | `skills/hatena-blog-markdown` | はてなブログ Markdown 記法 |
 | `skills/hatena-syntax-highlight` | はてなブログのコードハイライト記法 |
 | `skills/note-book-reading-memo` | note 向けビジネス・技術書の読書メモ |
