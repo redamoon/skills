@@ -1,6 +1,6 @@
 # skills
 
-A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specification) for blog writing and technical documentation workflows.
+A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specification) for blog writing, technical documentation, and UX thinking workflows.
 
 **日本語**: [README.ja.md](./README.ja.md)
 
@@ -20,6 +20,12 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 | `skills/documentation-writing` | Project technical documentation (README, guides, ADR) |
 | `skills/japanese-prose-revision` | Editor-grade Japanese revision norms (argument rigor, redundancy, LLM-style phrasing) |
 | `skills/cognitive-rhythm-writing` | Designing pacing and reading momentum in Japanese explanatory prose |
+
+## Skills (UX)
+
+| Directory | Purpose |
+|-----------|---------|
+| `skills/ux-thinking` | Design and diagnose UX from the user's job: journeys, friction, states, and copy |
 
 ## Install (from GitHub)
 

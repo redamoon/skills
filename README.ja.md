@@ -1,6 +1,6 @@
 # skills
 
-個人用の [Agent Skills](https://agentskills.io/specification) を Git で管理するリポジトリです（ブログ執筆・技術ドキュメント）。
+個人用の [Agent Skills](https://agentskills.io/specification) を Git で管理するリポジトリです（ブログ執筆・技術ドキュメント・UX 思考）。
 
 **English**: [README.md](./README.md)
 
@@ -20,6 +20,12 @@
 | `skills/documentation-writing` | プロジェクト技術ドキュメント（README、手順書、ADR など） |
 | `skills/japanese-prose-revision` | 編集者水準の日本語推敲規範（論証の厳密さ・冗長の排除・LLM っぽい表現） |
 | `skills/cognitive-rhythm-writing` | 日本語の説明文に緩急（認知リズム）を設計する規範 |
+
+## 含まれるスキル（UX）
+
+| ディレクトリ | 用途 |
+|-------------|------|
+| `skills/ux-thinking` | ユーザーの仕事から UX を設計・診断する（導線、摩擦、状態、コピー） |
 
 ## インストール（GitHub から）
 
