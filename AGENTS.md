@@ -27,6 +27,8 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 | `zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
 | `x-post-writing` | X 向けポスト文案の作成・推敲（For You / x-algorithm 準拠） |
 | `documentation-writing` | プロジェクト技術ドキュメント執筆 |
+| `japanese-prose-revision` | 編集者水準の日本語推敲規範（論証・冗長・LLM っぽい表現） |
+| `cognitive-rhythm-writing` | 日本語の説明文の緩急（認知リズム）設計 |
 
 ## スキル執筆ルール（メンテナ向け）
 

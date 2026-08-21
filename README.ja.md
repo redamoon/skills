@@ -18,6 +18,8 @@
 | `skills/zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
 | `skills/x-post-writing` | X 向けポスト文案の作成・推敲（For You / x-algorithm 準拠） |
 | `skills/documentation-writing` | プロジェクト技術ドキュメント（README、手順書、ADR など） |
+| `skills/japanese-prose-revision` | 編集者水準の日本語推敲規範（論証の厳密さ・冗長の排除・LLM っぽい表現） |
+| `skills/cognitive-rhythm-writing` | 日本語の説明文に緩急（認知リズム）を設計する規範 |
 
 ## インストール（GitHub から）
 

@@ -19,6 +19,8 @@ license: MIT
 
 ブログ記事の執筆・投稿向けには、同リポジトリの `zenn-blog-writing` や `blog-workflow` を使う。
 
+文章そのものの推敲（論証の厳密さ、冗長の排除、LLM っぽい表現の排除）は `japanese-prose-revision` に、緩急やリズムの設計は `cognitive-rhythm-writing` に従う。
+
 ## Instructions
 
 ### 執筆の前提

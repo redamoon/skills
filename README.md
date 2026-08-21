@@ -18,6 +18,8 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 | `skills/zenn-blog-writing` | Zenn technical blog writing guide |
 | `skills/x-post-writing` | X post copywriting for For You feed (x-algorithm) |
 | `skills/documentation-writing` | Project technical documentation (README, guides, ADR) |
+| `skills/japanese-prose-revision` | Editor-grade Japanese revision norms (argument rigor, redundancy, LLM-style phrasing) |
+| `skills/cognitive-rhythm-writing` | Designing pacing and reading momentum in Japanese explanatory prose |
 
 ## Install (from GitHub)
 
