@@ -1,6 +1,6 @@
 # Agent Instructions
 
-このリポジトリは、ブログ執筆・技術ドキュメント向けの [Agent Skills](https://agentskills.io/specification) を GitHub 経由で配布するためのカタログです。`gh skill publish` で公開し、利用者は `gh skill install` で各エージェントに導入します。
+このリポジトリは、ブログ執筆・技術ドキュメント・UX 思考向けの [Agent Skills](https://agentskills.io/specification) を GitHub 経由で配布するためのカタログです。`gh skill publish` で公開し、利用者は `gh skill install` で各エージェントに導入します。
 
 ## リポジトリ構成
 
@@ -29,6 +29,7 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 | `documentation-writing` | プロジェクト技術ドキュメント執筆 |
 | `japanese-prose-revision` | 編集者水準の日本語推敲規範（論証・冗長・LLM っぽい表現） |
 | `cognitive-rhythm-writing` | 日本語の説明文の緩急（認知リズム）設計 |
+| `ux-thinking` | ワイヤー前の質問で仕様を固め、合意後に Figma へ低忠実度ワイヤーを引き渡す |
 
 ## スキル執筆ルール（メンテナ向け）
 
