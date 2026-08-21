@@ -8,7 +8,7 @@
 
 | ディレクトリ | 用途 |
 |-------------|------|
-| `skills/blog-workflow` | ブログ記事の品質チェック（textlint・プラットフォーム別確認・レビュー） |
+| `skills/blog-workflow` | ブログ記事の執筆〜仕上げ（執筆・読者・編集者モードのサブエージェント周回 → textlint・プラットフォーム別確認） |
 | `skills/hatena-blog-markdown` | はてなブログ Markdown 記法 |
 | `skills/hatena-syntax-highlight` | はてなブログのコードハイライト記法 |
 | `skills/note-book-reading-memo` | note 向けビジネス・技術書の読書メモ |
@@ -18,6 +18,8 @@
 | `skills/zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
 | `skills/x-post-writing` | X 向けポスト文案の作成・推敲（For You / x-algorithm 準拠） |
 | `skills/documentation-writing` | プロジェクト技術ドキュメント（README、手順書、ADR など） |
+| `skills/japanese-prose-revision` | 編集者水準の日本語推敲規範（論証の厳密さ・冗長の排除・LLM っぽい表現） |
+| `skills/cognitive-rhythm-writing` | 日本語の説明文に緩急（認知リズム）を設計する規範 |
 
 ## インストール（GitHub から）
 

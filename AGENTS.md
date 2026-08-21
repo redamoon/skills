@@ -17,7 +17,7 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 
 | スキル | 用途 |
 |--------|------|
-| `blog-workflow` | ブログ記事の品質チェック一括（textlint・プラットフォーム別・読者レビュー） |
+| `blog-workflow` | ブログ記事の執筆〜仕上げ（3モードのサブエージェント周回 → textlint・プラットフォーム別確認） |
 | `hatena-blog-markdown` | はてなブログ Markdown 記法 |
 | `hatena-syntax-highlight` | はてなブログのコードシンタックスハイライト |
 | `note-book-reading-memo` | note 向けビジネス・技術書の読書メモ |
@@ -27,6 +27,8 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 | `zenn-blog-writing` | Zenn 技術ブログ執筆ガイド |
 | `x-post-writing` | X 向けポスト文案の作成・推敲（For You / x-algorithm 準拠） |
 | `documentation-writing` | プロジェクト技術ドキュメント執筆 |
+| `japanese-prose-revision` | 編集者水準の日本語推敲規範（論証・冗長・LLM っぽい表現） |
+| `cognitive-rhythm-writing` | 日本語の説明文の緩急（認知リズム）設計 |
 
 ## スキル執筆ルール（メンテナ向け）
 
