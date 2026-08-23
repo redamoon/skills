@@ -8,7 +8,7 @@ deliverable: job
 # UX 仕様
 
 `status` は `draft`（確認前）または `agreed`（仕事が合意済み）。
-`deliverable` は `questions` / `job` / `screen-roles` / `text-sketch` / `review` / `copy`。
+`deliverable` は `questions` / `job` / `screen-roles` / `screen-draft` / `review` / `copy`。
 
 ## 仕事
 
@@ -52,7 +52,7 @@ deliverable: job
 - 出さないもの:
 - 必要な状態:
 
-## テキストスケッチ
+## 画面の下書き
 
 配置は書かない。ユーザーが求めたときに埋める。
 
@@ -64,7 +64,9 @@ deliverable: job
 - 入力:
 - 出さないもの:
 
-## 摩擦台帳（既存の診断があるとき）
+## つまずき一覧（既存の診断があるとき）
+
+仕事が止まる場所の表。会計の台帳ではない。
 
 | 位置 | 種別 | 仕事が止まる理由 | 今の次の一手 |
 |------|------|------------------|--------------|
