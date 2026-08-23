@@ -7,10 +7,10 @@ deliverable: job
 
 # UX 仕様
 
-`status` は `draft`（確認前）または `agreed`（ジョブが合意済み）。
+`status` は `draft`（確認前）または `agreed`（仕事が合意済み）。
 `deliverable` は `questions` / `job` / `screen-roles` / `text-sketch` / `review` / `copy`。
 
-## ジョブ
+## 仕事
 
 - 誰:
 - 状況:
@@ -21,7 +21,7 @@ deliverable: job
 - 見たい数字: （数字の仕事だけ）
 - 材料と揃う時点:
 
-## ジャーニー
+## シナリオ
 
 1. きっかけ:
 2. 期待:
@@ -42,7 +42,7 @@ deliverable: job
 
 ## 画面の役割
 
-ジョブが合意されるまで、この節は空のままでよい。
+仕事が合意されるまで、この節は空のままでよい。
 
 ### 面1:
 
