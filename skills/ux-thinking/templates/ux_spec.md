@@ -2,15 +2,15 @@
 title: ""
 type: ux-spec
 status: draft
-deliverable: job-definition
+deliverable: job
 ---
 
 # UX 仕様
 
-`status` は `draft`（確認前）または `agreed`（仕事定義が合意済み）。
-`deliverable` は `questions` / `job-definition` / `screen-roles` / `review` / `copy`。
+`status` は `draft`（確認前）または `agreed`（ジョブが合意済み）。
+`deliverable` は `questions` / `job` / `screen-roles` / `text-sketch` / `review` / `copy`。
 
-## 仕事定義
+## ジョブ
 
 - 誰:
 - 状況:
@@ -18,8 +18,10 @@ deliverable: job-definition
 - 成功の瞬間:
 - 制約:
 - 一文: When …, I want to …, so I can …
+- 見たい数字: （数字の仕事だけ）
+- 材料と揃う時点:
 
-## 旅（出来事）
+## ジャーニー
 
 1. きっかけ:
 2. 期待:
@@ -34,9 +36,13 @@ deliverable: job-definition
 
 -
 
+## 途中で直したこと
+
+- （推測したラベルを捨てた、式を後から固定した、など）
+
 ## 画面の役割
 
-仕事定義が合意されるまで、この節は空のままでよい。
+ジョブが合意されるまで、この節は空のままでよい。
 
 ### 面1:
 
@@ -45,6 +51,18 @@ deliverable: job-definition
 - 出すもの:
 - 出さないもの:
 - 必要な状態:
+
+## テキストスケッチ
+
+配置は書かない。ユーザーが求めたときに埋める。
+
+### 面1 / 空
+
+- 見出し:
+- 本文:
+- 主ボタン:
+- 入力:
+- 出さないもの:
 
 ## 摩擦台帳（既存の診断があるとき）
 

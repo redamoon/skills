@@ -25,7 +25,7 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 
 | Directory | Purpose |
 |-----------|---------|
-| `skills/ux-thinking` | Lock UX spec before wires, then optionally hand off lo-fi frames to Figma |
+| `skills/ux-thinking` | Lock job and screen roles before wires, write text sketches (surface × state), then optionally hand off lo-fi frames to Figma |
 
 ## Install (from GitHub)
 
