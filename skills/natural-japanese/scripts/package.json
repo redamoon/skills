@@ -1,0 +1,19 @@
+{
+  "name": "natural-japanese-scripts",
+  "private": true,
+  "type": "module",
+  "description": "natural-japanese スキルの検査スクリプト（lint / outline / terms）。npx tsx で直接実行する。",
+  "scripts": {
+    "lint": "tsx lint.ts",
+    "outline": "tsx outline.ts",
+    "terms": "tsx terms.ts"
+  },
+  "dependencies": {
+    "kuromoji": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

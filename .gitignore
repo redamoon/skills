@@ -4,3 +4,6 @@ evals/
 
 # OS
 .DS_Store
+
+# スキル内のスクリプト依存（npm install で生成）
+node_modules/

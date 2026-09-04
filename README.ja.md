@@ -20,6 +20,7 @@
 | `skills/documentation-writing` | プロジェクト技術ドキュメント（README、手順書、ADR など） |
 | `skills/japanese-prose-revision` | 編集者水準の日本語推敲規範（論証の厳密さ・冗長の排除・LLM っぽい表現） |
 | `skills/cognitive-rhythm-writing` | 日本語の説明文に緩急（認知リズム）を設計する規範 |
+| `skills/natural-japanese` | 議事録・レポート・ガイド等のビジネス日本語を書く・直す（AI臭さの機械検出付き、[coji/natural-japanese](https://github.com/coji/natural-japanese) の TypeScript 移植） |
 
 ## 含まれるスキル（UX）
 

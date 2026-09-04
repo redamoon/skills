@@ -20,6 +20,7 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 | `skills/documentation-writing` | Project technical documentation (README, guides, ADR) |
 | `skills/japanese-prose-revision` | Editor-grade Japanese revision norms (argument rigor, redundancy, LLM-style phrasing) |
 | `skills/cognitive-rhythm-writing` | Designing pacing and reading momentum in Japanese explanatory prose |
+| `skills/natural-japanese` | Writing/revising Japanese business documents (minutes, reports, guides, memos, slides) with machine-detected AI-smell linting (TypeScript port of [coji/natural-japanese](https://github.com/coji/natural-japanese)) |
 
 ## Skills (UX)
 
