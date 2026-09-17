@@ -31,6 +31,13 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 | `cognitive-rhythm-writing` | 日本語の説明文の緩急（認知リズム）設計 |
 | `natural-japanese` | 議事録・レポート・ガイド等ビジネス日本語の執筆・推敲（AI臭さの機械検出付き。coji/natural-japanese の TypeScript 移植） |
 | `ux-thinking` | ワイヤー前の質問で仕様を固め、合意後に Figma へ低忠実度ワイヤーを引き渡す |
+| `sub-issue-instruction-template` | Sub-issueの指示文（範囲・やらないこと・触ってよい/いけないファイル・完了条件）を5項目の型で書く |
+| `adversarial-validation-checker` | 実装前のSub-issue指示文を、別の立場から敵対的に検証する |
+| `ai-ready-checker` | IssueがAI Readyの3条件（完了条件・自動検証・触ってよい範囲）を満たしているか判定する |
+| `code-review` | プルリクエストのレビューをプロジェクト固有のルールに絞って実行する |
+| `branch-worktree` | 実装前にmainを最新化し、ブランチを切ってGit worktreeを用意する |
+| `issue-management` | Issueの作成・親Issue（エピック）への紐づけ・孤立Issueの棚卸しを行う |
+| `learning-loop` | 再発した指摘を、テスト・lint→ルール文書→SKILLの優先順で仕組み化する |
 
 ## スキル執筆ルール（メンテナ向け）
 

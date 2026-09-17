@@ -28,6 +28,18 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 |-----------|---------|
 | `skills/ux-thinking` | Define the work to finish and an event scenario, write screen drafts in words (surface × state), then optionally hand off lo-fi frames to Figma |
 
+## Skills (issue-driven development)
+
+| Directory | Purpose |
+|-----------|---------|
+| `skills/sub-issue-instruction-template` | Write a Sub-issue instruction (scope, out-of-scope, allowed/forbidden files, completion criteria) in a fixed 5-item template |
+| `skills/adversarial-validation-checker` | Adversarially validate a Sub-issue instruction before implementation, from a separate reviewer stance |
+| `skills/ai-ready-checker` | Check whether an Issue meets the 3 AI-Ready conditions (explicit completion criteria, automated verification, scoped file boundaries) |
+| `skills/code-review` | Review a pull request against project-specific rules only, leaving general code quality to the model |
+| `skills/branch-worktree` | Refresh main, cut a branch, and create a Git worktree before starting implementation |
+| `skills/issue-management` | Create issues, link them to a parent epic, and sweep for orphaned issues with no parent |
+| `skills/learning-loop` | Mechanize a recurring correction in priority order: test/lint, then rule docs, then a SKILL |
+
 ## Install (from GitHub)
 
 Install with [GitHub CLI `gh skill`](https://cli.github.com/manual/gh_skill_install):

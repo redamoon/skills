@@ -28,6 +28,18 @@
 |-------------|------|
 | `skills/ux-thinking` | ワイヤー前に仕事と画面の役割を固め、面×状態の画面の下書きを書いてから、任意で Figma の低忠実度ワイヤーに渡す |
 
+## 含まれるスキル（Issue駆動開発）
+
+| ディレクトリ | 用途 |
+|-------------|------|
+| `skills/sub-issue-instruction-template` | Sub-issueの指示文（範囲・やらないこと・触ってよい/いけないファイル・完了条件）を5項目の型で書く |
+| `skills/adversarial-validation-checker` | 実装前のSub-issue指示文を、別の立場から敵対的に検証する |
+| `skills/ai-ready-checker` | Issueが完了条件の明文化・自動検証・触ってよい範囲の3条件（AI Ready）を満たしているか判定する |
+| `skills/code-review` | プルリクエストのレビューをプロジェクト固有のルールに絞って実行する |
+| `skills/branch-worktree` | 実装前にmainを最新化し、ブランチを切ってGit worktreeを用意する |
+| `skills/issue-management` | Issueの作成・親Issue（エピック）への紐づけ・孤立Issueの棚卸しを行う |
+| `skills/learning-loop` | 再発した指摘を、テスト・lint→ルール文書→SKILLの優先順で仕組み化する |
+
 ## インストール（GitHub から）
 
 [GitHub CLI の `gh skill`](https://cli.github.com/manual/gh_skill_install) でインストールできます。
