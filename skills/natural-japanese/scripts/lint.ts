@@ -65,6 +65,7 @@ const FORBIDDEN_PHRASES: string[] = [
   "結論から言うと",
   "結論として",
   "いかがでしたか",
+  "いかがでしたでしょうか",
   "いかがでしょうか",
   "まとめると",
   "総じて",
@@ -275,9 +276,9 @@ function normalizeExcerptForKey(excerpt: string): string {
 }
 
 function findingIdentityKey(category: string, excerpt: string): string {
-  if (CATEGORY_ONLY_KEY_CATEGORIES.has(category)) return `${category} `;
+  if (CATEGORY_ONLY_KEY_CATEGORIES.has(category)) return `${category} `;
   const normalized = normalizeExcerptForKey(excerpt).slice(0, BASELINE_KEY_EXCERPT_PREFIX_LEN);
-  return `${category} ${normalized}`;
+  return `${category} ${normalized}`;
 }
 
 interface BaselineFinding {
@@ -1223,6 +1224,273 @@ function detectStructuralAiHabits(rawText: string): [Finding[], Record<string, u
   return [findings, stats];
 }
 
+// ---------------------------------------------------------------------------
+// 比喩動詞・疑似具体語・表記の不自然さ（出典: yomiyasu <https://github.com/nanaism/yomiyasu>、MIT）
+//
+// 太字密度等と同じく raw テキスト（HTMLコメントのみマスク済み）に対して働く。
+// いずれも severity="info" 固定（当リポジトリのコーパス校正を経ていないため、
+// 他の校正済み検出器の warn/critical とは信頼度が異なることを明示する）。
+// 見出し行は（redundant_bracket を除き）スキャン対象から外す。元のPythonリンターの
+// スキャン範囲（箇条書き行は対象、見出し行は対象外）をそのまま踏襲する。
+// ---------------------------------------------------------------------------
+
+// yomiyasu の SLOP_WORDS をそのまま踏襲した語彙（質感を装う疑似具体語・抽象比喩名詞・必殺技造語）。
+const SLOP_WORDS: string[] = [
+  "手触り",
+  "肌感",
+  "肌感覚",
+  "体温",
+  "温度感",
+  "熱量",
+  "血の通った",
+  "泥臭い",
+  "泥臭さ",
+  "解像度",
+  "腹落ち",
+  "メンタルモデル",
+  "本質的",
+  "地に足のついた",
+  "等身大",
+  "営み",
+  "装置",
+  "意思決定OS",
+  "土台",
+  "羅針盤",
+  "起爆剤",
+  "触媒",
+  "真理",
+  "虚飾",
+  "境地",
+  "美学",
+  "深淵",
+  "冷徹",
+  "禁欲的",
+  "優美",
+  "極致",
+  "宿命",
+  "正本",
+];
+
+// 比喩動詞・AI偏愛動詞パターン（yomiyasu の METAPHOR_VERB_PATTERNS を踏襲。
+// 「1つずつ潰す」の原パターンは文字クラス化のバグがあったため修正して移植）。
+const METAPHOR_VERB_PATTERNS: Array<[RegExp, string]> = [
+  [/(地味に|よく|じわじわ)効[きくいた]/g, "比喩動詞「効く」の過剰使用"],
+  [/静かに(壊れ|落ち|失敗|沈黙)/g, "英語直訳「静かに壊れる (silently fail)」"],
+  [/黙って(無視|捨て|スキップ|破棄)/g, "英語直訳「黙って無視される」"],
+  [/側に倒[すしせ]/g, "判断を方向で表現する「〜側に倒す」"],
+  [/時間[をに]溶か[したす]/g, "比喩動詞「時間を溶かす」"],
+  [/(1つずつ|一つずつ)潰(し|している|していく|した)/g, "比喩動詞「潰す」"],
+  [/した瞬間に?/g, "英語直訳「〜した瞬間 (the moment ...)」"],
+  [/(前提|基盤)が崩れ[るた]/g, "抽象比喩「前提が崩れる」"],
+  [/文化が醸成/g, "非生物主語「文化が醸成される」"],
+  [/プロセスが定着/g, "非生物主語「プロセスが定着する」"],
+  [/事例が残した/g, "非生物主語「事例が残した」"],
+];
+
+const TRAILING_COLON_RE = /[：:]\s*$/;
+const EM_DASH_RE = /[—―]{1,3}/g;
+const HALFWIDTH_SPACE_AROUND_LATIN_RE = /([ぁ-んァ-ヶ一-龥])\s+([A-Za-z0-9_-]{2,})\s+([ぁ-ん])/;
+const MARKDOWN_LINK_INLINE_RE = /\[.*?\]\(.*?\)/;
+const REDUNDANT_HEADING_BRACKET_RE = /[（(](素の出力|いわゆる|概要|詳細)[）)]/;
+const FENCE_LINE_RE = /^\s*(`{3,}|~{3,})/;
+
+interface ScannableLine {
+  no: number;
+  raw: string;
+  scan: string; // インラインコードスパンを除去した走査用テキスト
+  isHeading: boolean;
+}
+
+/** 太字密度等と同じスキャン範囲（コードフェンス内・引用・表・画像・HTMLタグを除外）で
+ * raw テキストを走査可能な行列へ変換する。箇条書き行は除外しない（yomiyasu 本家の
+ * スキャン範囲に合わせる）。 */
+function iterScannableLines(rawText: string): ScannableLine[] {
+  const out: ScannableLine[] = [];
+  const lines = rawText.split("\n");
+  let inFence = false;
+  let fenceChar = "";
+  let fenceLen = 0;
+
+  lines.forEach((line, idx0) => {
+    const no = idx0 + 1;
+    const fenceMatch = line.match(FENCE_LINE_RE);
+    if (fenceMatch) {
+      const run = fenceMatch[1];
+      const fc = run[0];
+      const fl = run.length;
+      const closeEligible = line.slice(fenceMatch[0].length).trim() === "";
+      if (!inFence) {
+        inFence = true;
+        fenceChar = fc;
+        fenceLen = fl;
+      } else if (fc === fenceChar && fl >= fenceLen && closeEligible) {
+        inFence = false;
+      }
+      return;
+    }
+    if (inFence) return;
+
+    const trimmed = line.trim();
+    if (!trimmed) return;
+    if (trimmed.startsWith(">") || trimmed.startsWith("|") || trimmed.startsWith("![") || trimmed.startsWith("<")) return;
+
+    out.push({
+      no,
+      raw: trimmed,
+      scan: trimmed.replace(/`[^`]+`/g, ""),
+      isHeading: HEADING_RE.test(line),
+    });
+  });
+  return out;
+}
+
+function detectMetaphorVerbs(rawText: string): Finding[] {
+  const findings: Finding[] = [];
+  for (const { no, raw, scan, isHeading } of iterScannableLines(rawText)) {
+    if (isHeading) continue;
+    for (const [pattern, desc] of METAPHOR_VERB_PATTERNS) {
+      pattern.lastIndex = 0;
+      if (pattern.test(scan)) {
+        findings.push(
+          makeFinding({
+            line: no,
+            category: "metaphor_verb",
+            excerpt: raw.slice(0, 40),
+            severity: "info",
+            detail: `${desc}が検出された。不自然な比喩動詞であれば、ふだん使う動詞や客観的な表現に書き直す（比喩が運んでいた含みは別のふだんの言葉で残す）。文字どおりの動作・状態変化（物理的な物体や身体が主語）であれば言い換える必要はない`,
+          })
+        );
+      }
+    }
+  }
+  return findings;
+}
+
+function detectSlopVocabulary(rawText: string): Finding[] {
+  const findings: Finding[] = [];
+  for (const { no, raw, scan, isHeading } of iterScannableLines(rawText)) {
+    if (isHeading) continue;
+    for (const word of SLOP_WORDS) {
+      if (scan.includes(word)) {
+        findings.push(
+          makeFinding({
+            line: no,
+            category: "slop_vocabulary",
+            excerpt: raw.slice(0, 40),
+            severity: "info",
+            detail: `AI頻出語彙「${word}」が含まれている。文脈上必要のない比喩や大げさな装飾であれば、ふだん使う自然な表現に置き換える。専門用語として正当に機能している場合や、文の主題そのものを担っている語は無理に排除しない`,
+          })
+        );
+      }
+    }
+  }
+  return findings;
+}
+
+function detectFormattingSmells(rawText: string): Finding[] {
+  const findings: Finding[] = [];
+  for (const { no, raw, scan, isHeading } of iterScannableLines(rawText)) {
+    if (isHeading) {
+      if (REDUNDANT_HEADING_BRACKET_RE.test(scan)) {
+        findings.push(
+          makeFinding({
+            line: no,
+            category: "redundant_bracket",
+            excerpt: raw.slice(0, 40),
+            severity: "info",
+            detail: "見出しに情報量の増えない言い換えカッコが含まれている。平文で簡潔に記述する",
+          })
+        );
+      }
+      continue;
+    }
+
+    if (TRAILING_COLON_RE.test(scan) && !scan.startsWith("http")) {
+      findings.push(
+        makeFinding({
+          line: no,
+          category: "trailing_colon",
+          excerpt: raw.slice(0, 40),
+          severity: "info",
+          detail: "文末にコロン（：/:）が使われている。英語直訳の記法を避け、句点（。）で終えるか前置きを省く",
+        })
+      );
+    }
+
+    EM_DASH_RE.lastIndex = 0;
+    if (EM_DASH_RE.test(scan)) {
+      findings.push(
+        makeFinding({
+          line: no,
+          category: "em_dash",
+          excerpt: raw.slice(0, 40),
+          severity: "info",
+          detail: "ダッシュ記号（—/―）が使われている。日本語の地の文では助詞や読点でつなぐか、括弧（同格・補足の挿入）か句点二文（言い換え・敷衍）に置き換える",
+        })
+      );
+    }
+
+    if (HALFWIDTH_SPACE_AROUND_LATIN_RE.test(scan) && !MARKDOWN_LINK_INLINE_RE.test(scan)) {
+      findings.push(
+        makeFinding({
+          line: no,
+          category: "unnatural_halfwidth_space",
+          excerpt: raw.slice(0, 40),
+          severity: "info",
+          detail: "英単語の前後に不要な半角空白が空けられている。日本語の助詞・平仮名と自然に接続させる",
+        })
+      );
+    }
+  }
+  return findings;
+}
+
+// 文末表現の型（yomiyasu の check_sentence_end_repetitions を踏襲）。
+const SENTENCE_END_TYPES: Array<[RegExp, string]> = [
+  [/です$/, "です"],
+  [/ます$/, "ます"],
+  [/でした$/, "でした"],
+  [/ました$/, "ました"],
+  [/である$/, "である"],
+  [/だろう$/, "だろう"],
+  [/だ$/, "だ"],
+];
+
+function classifySentenceEnd(sentence: string): string {
+  const clean = sentence.replace(/[。！？\s]+$/, "");
+  for (const [pattern, label] of SENTENCE_END_TYPES) {
+    if (pattern.test(clean)) return label;
+  }
+  return "その他";
+}
+
+function detectSentenceEndRepetition(sentences: Array<[number, string, string]>): Finding[] {
+  const findings: Finding[] = [];
+  let count = 1;
+  let prevType: string | null = null;
+  sentences.forEach(([no, maskedText, rawText], i) => {
+    const type = classifySentenceEnd(maskedText);
+    if (i > 0 && type !== "その他" && type === prevType) {
+      count += 1;
+      if (count === 3) {
+        findings.push(
+          makeFinding({
+            line: no,
+            category: "sentence_end_repetition",
+            excerpt: (rawText || maskedText).slice(0, 40),
+            severity: "info",
+            detail: `同一文末「${type}」が3文以上連続している。体言止め・動詞連用形中止・倒置などを交差させてリズムを調整する`,
+          })
+        );
+      }
+    } else {
+      count = 1;
+    }
+    prevType = type;
+  });
+  return findings;
+}
+
 // --- 読解負荷レーン（推敲用の指さし。AI臭さスコアには含まれない） ---
 const READING_LOAD_SENTENCE_MAX_CHARS = 90;
 const READING_LOAD_BURIED_LIST_MIN_ITEMS = 3;
@@ -1490,6 +1758,10 @@ async function runLint(
   const profile = (genre && GENRE_PROFILES[genre]) || {};
 
   const [structuralFindings, structuralStats] = detectStructuralAiHabits(maskHtmlComments(rawText));
+  const commentMaskedText = maskHtmlComments(rawText);
+  const metaphorFindings = detectMetaphorVerbs(commentMaskedText);
+  const slopFindings = detectSlopVocabulary(commentMaskedText);
+  const formattingFindings = detectFormattingSmells(commentMaskedText);
 
   const text = maskMarkdownStructure(rawText);
   const lines = iterLinesWithNo(text);
@@ -1512,6 +1784,10 @@ async function runLint(
   );
   findings = findings.concat(detectLowSentenceLengthVariance(sentences));
   findings = findings.concat(detectEnglishSyntaxSmell(lines, rawLinesByNo));
+  findings = findings.concat(metaphorFindings);
+  findings = findings.concat(slopFindings);
+  findings = findings.concat(formattingFindings);
+  findings = findings.concat(detectSentenceEndRepetition(sentences));
 
   const [nominalAndConjFindings, morphStats] = detectNominalEndingAndParagraphConjunctions(lines, tokenized, rawLinesByNo, {
     nominalMinChars: profile.nominal_min_chars ?? NOMINAL_ENDING_MIN_CHARS,

@@ -97,7 +97,9 @@ npx tsx scripts/lint.ts --json <file>
 
 lint の findings は疑いの提示であり、機械的に全部直せという指示ではない。今回ヒットしたカテゴリの節を `references/revision-guide.md` で読み直し、文脈に照らして「直す/直さない」を判断する。判断は finding 一つひとつに「直した」か「残す（理由）」かを書き残しながら進める（台帳の形式は同ファイルの「判断台帳」を参照）。
 
-用語カタログが必要なら: 禁止語 → `references/forbidden-patterns.md`、翻訳調 → `references/translationese.md`。専門用語が初出で説明されているか確認する材料には `npx tsx scripts/terms.ts <file>` を使う。カタカナ複合語・ASCII略語・固有名詞らしき語を初出行・出現回数・説明マーカーの有無つきで列挙する（説明済みかどうかは機械が判断せず、AI/人間が行う）。
+用語カタログが必要なら: 禁止語 → `references/forbidden-patterns.md`、翻訳調 → `references/translationese.md`、比喩動詞 → `references/metaphor-verbs.md`。専門用語が初出で説明されているか確認する材料には `npx tsx scripts/terms.ts <file>` を使う。カタカナ複合語・ASCII略語・固有名詞らしき語を初出行・出現回数・説明マーカーの有無つきで列挙する（説明済みかどうかは機械が判断せず、AI/人間が行う）。
+
+既存文章・他人の下書きをリライトするときは、`references/revision-guide.md` の「意味保持の4点チェック」を書き直す前後で必ず当てる。新規執筆（§1〜2）には適用しない。
 
 ### 構造レビュー — スケルトン通読
 
