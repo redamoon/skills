@@ -44,7 +44,7 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 
 | Directory | Purpose |
 |-----------|---------|
-| `skills/code-spec-extractor` | Extract evidence-backed (`file:line`) specs from an existing codebase in any language; for React / Vue it also lists screens and generates a screen transition diagram |
+| `skills/code-spec-extractor` | Extract evidence-backed (`file:line`) specs from an existing codebase in any language; for frontends (React / Vue / Svelte / Angular) it lists screens and generates a screen transition diagram, and it detects shared logic and shared libraries (e.g. DLLs) across frontend and backend |
 
 ## Install (from GitHub)
 

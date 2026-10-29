@@ -76,6 +76,10 @@ PATTERNS = {
         ("http", (".ts", ".tsx", ".js", ".jsx"), r"export\s+(?:async\s+)?function\s+(GET|POST|PUT|PATCH|DELETE)\b"),
         ("http", (".ts", ".tsx", ".js", ".jsx"), r"export\s+(?:async\s+)?function\s+(getServerSideProps|getStaticProps)\b"),
     ],
+    "frontend-svelte-angular": [
+        # SvelteKit: +server.ts の HTTP ハンドラ、+page.server.ts の load / actions、hooks.server.ts
+        ("http", (".ts", ".js"), r"export\s+(?:async\s+)?(?:function|const)\s+(GET|POST|PUT|PATCH|DELETE|load|actions|handle)\b"),
+    ],
     "frontend-vue": [
         ("http", (".ts", ".js"), r"\bdefine(?:Cached)?EventHandler\("),
         ("job", (".ts", ".js"), r"\bdefineTask\(|\bdefineNitroPlugin\("),

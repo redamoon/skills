@@ -32,6 +32,9 @@ MARKERS = [
     ("package.json", '"@react-router/dev"', "remix"),
     ("package.json", '"react"', "react"),
     ("package.json", '"vue"', "vue"),
+    ("package.json", '"@sveltejs/kit"', "sveltekit"),
+    ("package.json", '"svelte"', "svelte"),
+    ("package.json", '"@angular/core"', "angular"),
     ("package.json", '"express"', "node-express"),
     ("package.json", '"fastify"', "node-express"),
     ("package.json", '"hono"', "node-express"),
@@ -72,6 +75,8 @@ STACK_REF = {
     "nestjs": "typescript-node", "nextjs": ["typescript-node", "frontend-react"], "node-express": "typescript-node",
     "remix": ["typescript-node", "frontend-react"], "react": "frontend-react",
     "nuxt": ["typescript-node", "frontend-vue"], "vue": "frontend-vue",
+    "sveltekit": ["typescript-node", "frontend-svelte-angular"], "svelte": "frontend-svelte-angular",
+    "angular": "frontend-svelte-angular",
     "node": "typescript-node", "django": "python", "fastapi": "python", "flask": "python",
     "spring": "java-spring", "go": "go", "rails": "ruby-rails", "laravel": "php-laravel",
     "php": "php-laravel", "aspnetcore": "csharp-dotnet", "dotnet": "csharp-dotnet",
@@ -127,7 +132,7 @@ def detect(root):
     if langs.get("perl") and not (PERL_STACKS & set(stacks)):
         stacks["perl"] = {"(拡張子から推定)"}
     # フルスタックFWが出たら、同じ場所の素の react / vue は内包されるので落とす
-    for full, base in (("nextjs", "react"), ("remix", "react"), ("nuxt", "vue")):
+    for full, base in (("nextjs", "react"), ("remix", "react"), ("nuxt", "vue"), ("sveltekit", "svelte")):
         if full in stacks and base in stacks:
             stacks[base] -= stacks[full]
             if not stacks[base]:
@@ -145,7 +150,7 @@ def detect(root):
         refs |= set(r) if isinstance(r, list) else {r}
     refs = sorted(refs) or ["_generic"]
     # マーカーが無いのにソースがある言語(COBOL, PL/SQL など)は汎用参照
-    known = {"typescript", "javascript", "vue", "python", "java", "kotlin", "go", "ruby", "php", "csharp", "perl"}
+    known = {"typescript", "javascript", "vue", "svelte", "python", "java", "kotlin", "go", "ruby", "php", "csharp", "perl"}
     if any(l not in known and l != "sql" for l in langs):
         refs = sorted(set(refs) | {"_generic"})
     return {

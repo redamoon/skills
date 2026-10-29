@@ -44,7 +44,7 @@
 
 | ディレクトリ | 用途 |
 |-------------|------|
-| `skills/code-spec-extractor` | 既存コードから根拠（file:line）付きの仕様書を抽出する。言語を問わず使え、React / Vue では画面一覧と画面遷移図も出す |
+| `skills/code-spec-extractor` | 既存コードから根拠（file:line）付きの仕様書を抽出する。言語を問わず使え、フロントエンド（React / Vue / Svelte / Angular）では画面一覧と画面遷移図、フロント・バックエンド共通で共通部品と共有ライブラリ（DLL など）の候補も出す |
 
 ## インストール（GitHub から）
 

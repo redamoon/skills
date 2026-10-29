@@ -9,6 +9,7 @@
 - **データ定義**: DDL(`CREATE TABLE`)、コピー句(COBOL)、レコード定義、スキーマファイル
 - **ジョブ定義**: JCL、cron、シェルスクリプト、ジョブスケジューラの定義ファイル
 - **設定**: `.ini`、`.properties`、`.yaml`、環境変数の参照箇所
+- **共通部品・共有ライブラリ**: 対応言語なら `python3 scripts/shared_logic.py <対象>`、複数プロジェクト構成(.sln / Maven / Gradle / CMake)なら `--projects`。非対応言語(COBOL のコピー句、Delphi のユニット、VB6 のモジュール等)は「複数のプログラムから参照される定義」を grep で数えて同じ考え方で候補を作る
 - **呼び出し関係**: ctags / universal-ctags、tree-sitter が使えるならシンボル一覧を作る
 
 ## 読む順番

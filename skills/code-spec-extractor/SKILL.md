@@ -18,7 +18,7 @@ license: MIT
 ## 原則(必ず守る)
 
 1. **事実と推測を分ける**: コードから直接読み取れることは「事実」、意図や背景の推定は「推測」として明示的に区別する。推測を事実として書かない。
-2. **根拠を必ず付ける**: 仕様の各項目に `path/to/file.ext:行番号` を付ける。根拠を示せない項目は書かない。
+2. **根拠を必ず付ける**: 仕様の各項目に `path/to/file.ext:行番号` を付ける。パスは対象リポジトリのルートからの相対パスで書く(`page.tsx:82` のようなファイル名だけの表記は、同名ファイルが複数あると特定できない)。行番号は主張を裏付けるコードの行を指す(ファイル先頭の `:1` で済ませない)。根拠を示せない項目は書かない。
 3. **機械で取れる事実はスクリプトで取る**: ルート一覧・画面一覧・スキーマ・依存関係などは、読んで推測する前にスクリプトや既存ツールで取得する。
 4. **分からないことは「未確認」とする**: 埋めずに「未確認事項」に積む。
 
@@ -27,8 +27,9 @@ license: MIT
 - `scripts/detect_stack.py`: 言語・フレームワークの判定と、読むべき参照ファイルの提示
 - `scripts/grep_entrypoints.py`: エントリポイント候補を `file:line` 付きで列挙
 - `scripts/dep_graph.py`: import/use を解析し、モジュール依存をMermaid図＋根拠表で出力
-- `scripts/screen_inventory.py`: フロントエンドの画面一覧、画面ごとの事実(API・フォーム・状態分岐・遷移)、画面遷移図を出力
-- `references/stacks/*.md`: 言語・フレームワーク別の読み方(対応: typescript-node, python, java-spring, go, ruby-rails, php-laravel, csharp-dotnet, perl, frontend-react, frontend-vue, _generic)
+- `scripts/screen_inventory.py`: フロントエンドの画面一覧、画面ごとの事実(API・フォーム・状態分岐・派生値・遷移)、画面遷移図を出力
+- `scripts/shared_logic.py`: 複数箇所から使われロジックを持つ共通部品(フック・ストア・サービス・ユーティリティなど)の候補と、プロジェクト間の参照図(共有ライブラリ・DLL)を出力
+- `references/stacks/*.md`: 言語・フレームワーク別の読み方(対応: typescript-node, python, java-spring, go, ruby-rails, php-laravel, csharp-dotnet, perl, frontend-react, frontend-vue, frontend-svelte-angular, _generic)
 - `references/mermaid.md`: 図の種類(依存図・画面遷移図・ER図・シーケンス図・状態遷移図)と描き方のルール
 - `templates/module-spec.md`: モジュール仕様の出力テンプレート
 - `templates/screen-spec.md`: 画面仕様の出力テンプレート
@@ -55,6 +56,8 @@ python3 scripts/detect_stack.py <対象ディレクトリ>
 - 出力する仕様の種類: 機能仕様 / API仕様 / 画面仕様 / データモデル / 業務ルール / バッチ・ジョブ / 外部連携
 
 大きいリポジトリでは、いきなり全体を読まない。まずモジュール一覧(画面があれば画面一覧も)を作り、優先順位を合意する。
+
+範囲の提案には、Step 3 の `shared_logic.py` で出る**共通部品の候補**も含める。ユーザーが画面や機能だけを指定した場合でも、その画面・機能が使う共通部品(フック・ストア・サービス・ユーティリティ・共有ライブラリ)は「別にモジュール仕様として書くか、画面・機能の仕様に含めるか」を確認する。候補は機械的な推定なので、そのまま採用せず合意を取る。
 
 ### Step 3. 事実を機械的に集める
 
@@ -85,7 +88,16 @@ python3 scripts/dep_graph.py <対象ディレクトリ> --prefix <ソースの�
 
 出力(Mermaid図＋根拠表)は `spec-work/facts/module-deps.md` に保存する。ノードが多すぎる/粗すぎる場合は `--depth` を調整する。Step 2 のモジュール一覧づくりにも使える。
 
-フロントエンド(`frontend-react` / `frontend-vue`)があれば、画面もここで機械的に取る:
+共通部品とプロジェクト構成も機械的に取る(言語・フロント/バックエンドを問わない):
+
+```bash
+python3 scripts/shared_logic.py <対象ディレクトリ>              # 共通部品の候補 → spec-work/facts/shared-logic.md
+python3 scripts/shared_logic.py <対象ディレクトリ> --projects   # プロジェクト参照図 → spec-work/facts/projects.md
+```
+
+共通部品の候補は「2つ以上の利用元(ディレクトリ単位)から import され、ロジックの兆候(計算・日付・分岐ルール・入力検証・状態管理・定数・外部I/O)を持つファイル」。`--projects` は .NET のソリューション(共有 DLL)、Maven / Gradle のマルチモジュール、CMake、JS / Cargo のワークスペースのように、複数プロジェクトで構成されるリポジトリで使う。
+
+フロントエンド(`frontend-react` / `frontend-vue` / `frontend-svelte-angular`)があれば、画面もここで機械的に取る:
 
 ```bash
 python3 scripts/screen_inventory.py <対象ディレクトリ>                    # 画面一覧 → spec-work/facts/screens.md
@@ -121,7 +133,7 @@ python3 scripts/screen_inventory.py <対象ディレクトリ> --screen <ルー�
 
 ### Step 5. モジュール・画面単位で書く
 
-`templates/module-spec.md` に沿って、モジュールごとに `spec-work/modules/<モジュール名>.md` を作る。画面は `templates/screen-spec.md` に沿って `spec-work/screens/<画面名>.md` に1画面1ファイルで作る。1ファイルが長くなりすぎたら機能単位でさらに分割する。
+`templates/module-spec.md` に沿って、モジュールごとに `spec-work/modules/<モジュール名>.md` を作る。Step 2 で合意した共通部品もモジュールとして扱い、業務ルール表・状態遷移図まで書く(画面や機能の仕様からはリンクで参照する)。画面は `templates/screen-spec.md` に沿って `spec-work/screens/<画面名>.md` に1画面1ファイルで作る。1ファイルが長くなりすぎたら機能単位でさらに分割する。
 
 図は `references/mermaid.md` を読んでから描く。モジュールごとに、該当するものを入れる。
 
@@ -133,11 +145,12 @@ python3 scripts/screen_inventory.py <対象ディレクトリ> --screen <ルー�
 
 ### Step 6. 統合する
 
-モジュール別・画面別の仕様から全体を組み立てる。
+モジュール別・画面別の仕様から全体を組み立てる。`spec-work/` は作業場所(素材と下書き)、`specs/` は読み手に渡す成果物で、`spec-work/modules/` と `spec-work/screens/` の下書きは仕上げて `specs/` に移す。`spec-work/facts/` は根拠の再確認と差分更新に使うので残しておく。
 
 - `specs/README.md`: システム概要、モジュール一覧、画面一覧、モジュール間の依存(`dep_graph.py` の図を埋め込む)
-- `specs/screens/`: 画面仕様(README の画面一覧からリンクする)
-- `specs/diagrams/`: 全体図(`module-deps.md`: モジュール依存図、`screen-transitions.md`: 画面遷移図、`er.md`: 全体ER図)
+- `specs/modules/`: モジュール仕様(README のモジュール一覧からリンクする)
+- `specs/screens/`: 画面仕様(README の画面一覧からリンクする)。画面が共有ロジック(共通のフック・ストア・整形関数)を使う場合は、画面仕様に重複して書かず `specs/modules/` の該当仕様へリンクする
+- `specs/diagrams/`: 全体図(`module-deps.md`: モジュール依存図、`screen-transitions.md`: 画面遷移図、`projects.md`: プロジェクト参照図(複数プロジェクト構成の場合)、`er.md`: 全体ER図)
 - `specs/glossary.md`: 用語集(コード上の名前と業務用語・画面上の文言の対応)
 - `specs/open-questions.md`: 未確認事項の一覧(誰に確認すべきかの見当も添える)
 
@@ -145,13 +158,13 @@ python3 scripts/screen_inventory.py <対象ディレクトリ> --screen <ルー�
 
 出力前に確認する。
 
-- [ ] すべての項目に `file:line` の根拠があるか
+- [ ] すべての項目に `file:line` の根拠があり、パスがリポジトリのルートからの相対パスになっているか
 - [ ] 「推測」が「事実」の欄に混ざっていないか
 - [ ] 根拠の行番号を数件ランダムに開き、実際に書かれた内容と一致するか
-- [ ] Step 3 で集めたエントリポイントと画面が漏れなく仕様に載っているか(件数を突き合わせる)
+- [ ] Step 3 で集めたエントリポイントと画面、Step 2 で合意した共通部品が漏れなく仕様に載っているか(件数を突き合わせる)
 - [ ] 図の各要素に根拠があり、推測の関係が点線になっているか
 - [ ] Mermaid が描画できるか(`npx -y @mermaid-js/mermaid-cli -i <file>.md -o /tmp/out.md` が使える環境なら実行する。使えなければ ID の記号・予約語 `end` を目視確認)
 
 ## 再抽出(差分更新)
 
-既存の `specs/` がある場合は全体をやり直さない。`git diff --name-only <前回の基準コミット>` で変更ファイルを出し、影響するモジュール・画面だけ Step 3〜7 をやり直す。画面は共通コンポーネントの変更でも影響を受けるので、`screen_inventory.py --screen` の「追跡したファイル」に変更ファイルが含まれる画面を対象にする。各仕様ファイルの先頭に、抽出時のコミットハッシュを記録しておく。
+既存の `specs/` がある場合は全体をやり直さない。`git diff --name-only <前回の基準コミット>` で変更ファイルを出し、影響するモジュール・画面だけ Step 3〜7 をやり直す。画面は共通コンポーネントの変更でも影響を受けるので、`screen_inventory.py --screen` の「追跡したファイル」に変更ファイルが含まれる画面を対象にする。共通部品が変わった場合は、`shared_logic.py` の「利用元」に出る画面・モジュールも見直す。各仕様ファイルの先頭に、抽出時のコミットハッシュを記録しておく。

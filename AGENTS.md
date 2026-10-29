@@ -38,7 +38,7 @@ skills/<skill-name>/           # 任意: reference.md, scripts/ など
 | `branch-worktree` | 実装前にmainを最新化し、ブランチを切ってGit worktreeを用意する |
 | `issue-management` | Issueの作成・親Issue（エピック）への紐づけ・孤立Issueの棚卸しを行う |
 | `learning-loop` | 再発した指摘を、テスト・lint→ルール文書→SKILLの優先順で仕組み化する |
-| `code-spec-extractor` | 既存コードから根拠（file:line）付きの仕様書を抽出する（言語非依存。React / Vue は画面一覧・画面遷移も取る） |
+| `code-spec-extractor` | 既存コードから根拠（file:line）付きの仕様書を抽出する（言語非依存。フロントエンドは画面一覧・画面遷移、共通部品・共有ライブラリも機械検出する） |
 
 ## スキル執筆ルール（メンテナ向け）
 
