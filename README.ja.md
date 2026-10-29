@@ -40,6 +40,12 @@
 | `skills/issue-management` | Issueの作成・親Issue（エピック）への紐づけ・孤立Issueの棚卸しを行う |
 | `skills/learning-loop` | 再発した指摘を、テスト・lint→ルール文書→SKILLの優先順で仕組み化する |
 
+## 含まれるスキル（コード理解）
+
+| ディレクトリ | 用途 |
+|-------------|------|
+| `skills/code-spec-extractor` | 既存コードから根拠（file:line）付きの仕様書を抽出する。言語を問わず使え、React / Vue では画面一覧と画面遷移図も出す |
+
 ## インストール（GitHub から）
 
 [GitHub CLI の `gh skill`](https://cli.github.com/manual/gh_skill_install) でインストールできます。
