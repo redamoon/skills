@@ -40,6 +40,12 @@ A Git-managed catalog of personal [Agent Skills](https://agentskills.io/specific
 | `skills/issue-management` | Create issues, link them to a parent epic, and sweep for orphaned issues with no parent |
 | `skills/learning-loop` | Mechanize a recurring correction in priority order: test/lint, then rule docs, then a SKILL |
 
+## Skills (code understanding)
+
+| Directory | Purpose |
+|-----------|---------|
+| `skills/code-spec-extractor` | Extract evidence-backed (`file:line`) specs from an existing codebase in any language; for React / Vue it also lists screens and generates a screen transition diagram |
+
 ## Install (from GitHub)
 
 Install with [GitHub CLI `gh skill`](https://cli.github.com/manual/gh_skill_install):
