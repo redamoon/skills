@@ -3,6 +3,7 @@
 ## 機械的に取れる情報
 
 - **ルート**: NestJS は `@Controller` + `@Get` 等。Express/Fastify/Hono は `app.get(...)`、`router.post(...)`。Next.js App Router は `app/**/route.ts` の `export function GET`、Pages Router は `pages/api/**`
+- **GraphQL**: NestJS の `@Resolver` + `@Query` / `@Mutation`、Apollo / graphql-yoga のリゾルバマップ(`Query: { ... }`)、スキーマファイル(`*.graphql`、code-first なら生成された `schema.gql`)。スキーマ全体が API 仕様の骨格になる
 - **OpenAPI**: `@nestjs/swagger` があればアプリ起動して `/api-json` 等から取得。`zod-to-openapi`、`tsoa` も確認
 - **データモデル**: Prisma `schema.prisma`、TypeORM `@Entity`、Drizzle `pgTable(...)`、Sequelize `define`、マイグレーションディレクトリ
 - **入力検証**: `class-validator` デコレータ、zod スキーマ、DTO クラス
