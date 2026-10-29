@@ -22,25 +22,31 @@ PATTERNS = {
         ("http", (".ts",), r"@(Get|Post|Put|Patch|Delete|All)\(\s*['\"]?([^'\")]*)"),
         ("http", (".ts",), r"@Controller\(\s*['\"]?([^'\")]*)"),
         ("http", (".ts", ".tsx", ".js"), r"export\s+(?:async\s+)?function\s+(GET|POST|PUT|PATCH|DELETE)\b"),
+        # GraphQL: NestJS のリゾルバ、Apollo / graphql-yoga のリゾルバマップ
+        ("graphql", (".ts", ".js"), r"@(Query|Mutation|Subscription|ResolveField)\(|^\s*(Query|Mutation|Subscription)\s*:\s*\{"),
         ("job", (".ts", ".js"), r"@(Cron|Interval|Process|EventPattern|MessagePattern|OnEvent)\("),
         ("job", (".ts", ".js"), r"\b(?:cron\.schedule|new\s+Worker|\.process)\("),
     ],
     "python": [
         ("http", (".py",), r"@(?:app|router|bp|blueprint)\.(get|post|put|patch|delete|route)\(\s*['\"]([^'\"]+)"),
         ("http", (".py",), r"\b(?:re_)?path\(\s*r?['\"]([^'\"]*)"),
+        ("graphql", (".py",), r"@strawberry\.(?:type|mutation|field)|class\s+(?:Query|Mutation)\s*\(\s*graphene\.ObjectType|\bdef\s+resolve_\w+\("),
         ("job", (".py",), r"@(?:shared_task|app\.task|celery\.task|periodic_task)"),
         ("cli", (".py",), r"class\s+Command\(BaseCommand\)|@click\.command|@app\.command"),
     ],
     "java-spring": [
         ("http", (".java", ".kt"), r"@(Get|Post|Put|Patch|Delete|Request)Mapping\(?([^)]*)"),
+        ("graphql", (".java", ".kt"), r"@(QueryMapping|MutationMapping|SubscriptionMapping|SchemaMapping|DgsQuery|DgsMutation)\b"),
         ("job", (".java", ".kt"), r"@(Scheduled|KafkaListener|RabbitListener|JmsListener|SqsListener|EventListener)\b"),
     ],
     "go": [
         ("http", (".go",), r"\.(GET|POST|PUT|PATCH|DELETE|Handle|HandleFunc|Get|Post|Put|Patch|Delete)\(\s*\"([^\"]+)"),
         ("cli", (".go",), r"&cobra\.Command\{"),
+        ("graphql", (".go",), r"^func\s+\(r\s+\*(?:query|mutation|subscription)Resolver\)\s+(\w+)"),
     ],
     "ruby-rails": [
         ("http", (".rb",), r"^\s*(get|post|put|patch|delete|resources?|namespace|scope)\s+[:'\"]([^'\",\s]+)"),
+        ("graphql", (".rb",), r"class\s+\w+\s*<\s*(?:Types::BaseObject|GraphQL::Schema::(?:Object|Mutation|RelayClassicMutation)|Mutations::Base\w*)|^\s*field\s+:\w+"),
         ("job", (".rb",), r"class\s+\w+\s*<\s*(ApplicationJob|ActiveJob::Base)|include\s+Sidekiq::(Worker|Job)"),
     ],
     "php-laravel": [
@@ -75,6 +81,10 @@ PATTERNS = {
         ("http", (".ts", ".tsx", ".js", ".jsx"), r"export\s+(?:async\s+)?(?:function|const)\s+(loader|action)\b"),
         ("http", (".ts", ".tsx", ".js", ".jsx"), r"export\s+(?:async\s+)?function\s+(GET|POST|PUT|PATCH|DELETE)\b"),
         ("http", (".ts", ".tsx", ".js", ".jsx"), r"export\s+(?:async\s+)?function\s+(getServerSideProps|getStaticProps)\b"),
+    ],
+    "frontend-svelte-angular": [
+        # SvelteKit: +server.ts の HTTP ハンドラ、+page.server.ts の load / actions、hooks.server.ts
+        ("http", (".ts", ".js"), r"export\s+(?:async\s+)?(?:function|const)\s+(GET|POST|PUT|PATCH|DELETE|load|actions|handle)\b"),
     ],
     "frontend-vue": [
         ("http", (".ts", ".js"), r"\bdefine(?:Cached)?EventHandler\("),

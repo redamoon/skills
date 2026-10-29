@@ -9,6 +9,7 @@
   - Vue Router: `createRouter({ routes })` の `routes` 配列。children の相対パスはインデントから親と結合した推定値なので、親子関係はコードで確かめる。`component: () => import(...)` の遅延読み込みも解決する
 - **画面ごとの事実**: `--screen <ルート>` で、画面ファイルから import を `--follow` 段たどって集める。Nuxt は自動インポートされるコンポーネント(`components/` 配下、ディレクトリ名を前置した PascalCase 名)と composable(`composables/`・`utils/` の export)も名前から解決してたどる
 - **画面遷移**: `--transitions` で `router.push` / `navigateTo` / `<NuxtLink to>` / `<RouterLink to>` のリテラルを画面ルートに突き合わせた図を出す
+- **共通部品**: `python3 scripts/shared_logic.py <対象>` で、複数画面から使われる composable・Pinia / Vuex ストア・整形関数の候補を出す(Nuxt の自動インポート経由の利用も数える)。画面仕様に重複して書かず、モジュール仕様にまとめる
 - **サーバ側の入口(Nuxt)**: `server/api/**`、`server/routes/**` の `defineEventHandler`。ファイル名の `.get.ts` / `.post.ts` が HTTP メソッド。`grep_entrypoints.py --stack frontend-vue` で拾える
 - **データ取得**: `useFetch` / `useLazyFetch` / `useAsyncData` / `$fetch`(Nuxt)、axios、TanStack Query(`useQuery`)、Pinia ストアの action 内の API 呼び出し
 - **フォームと入力検証**: `v-model`、VeeValidate(`useForm`、`defineField`、`rules`)、Vuelidate、zod / yup スキーマ、UI ライブラリのフォーム(`el-form` の `rules`、Vuetify の `:rules`)

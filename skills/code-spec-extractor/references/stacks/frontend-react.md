@@ -12,6 +12,7 @@
   - React Router v7 で `app/routes.ts` がある場合は設定ベース(`route("path", "file")`)。スクリプトで拾えないときは手で一覧化する
 - **画面ごとの事実**: `--screen <ルート>` で、画面ファイルから import を `--follow` 段たどって API 呼び出し・フォーム・バリデーション・イベントハンドラ・遷移・表示分岐・状態管理・見出しを集める
 - **画面遷移**: `--transitions` で `router.push` / `navigate` / `<Link href>` / `redirect` のリテラルを画面ルートに突き合わせた図を出す
+- **共通部品**: `python3 scripts/shared_logic.py <対象>` で、複数画面から使われるカスタムフック・ストア(Redux / Zustand / Jotai / Recoil)・Context・整形関数の候補を出す。画面仕様に重複して書かず、モジュール仕様にまとめる
 - **状態の手がかり(Next.js App Router)**: 同じ階層や祖先の `loading.tsx`(読み込み中)、`error.tsx`(エラー)、`not-found.tsx`(該当なし)、`layout.tsx`(共通枠)。画面一覧の備考に出る
 - **データ取得**: `fetch`、axios、TanStack Query(`useQuery` / `useMutation`)、SWR、tRPC、GraphQL(`gql`)、Server Components の `async` 関数内 fetch、Server Actions(`"use server"`)、Remix の `loader` / `action`、Pages Router の `getServerSideProps`
 - **フォームと入力検証**: React Hook Form(`register("name")`、`resolver: zodResolver(schema)`)、Formik、zod / yup / valibot スキーマ、HTML 属性(`required`、`maxLength`、`pattern`)

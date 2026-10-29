@@ -7,11 +7,13 @@
   python3 screen_inventory.py <対象ディレクトリ> --transitions [--follow N]            # 画面遷移図(Mermaid)
   共通: --json
 
-  --follow N    画面ファイルから import(と Nuxt の自動インポート)を N 段たどる(既定 2)
+  --follow N    画面ファイルから UI 部品を N 段たどる(既定 2)。フック・ストア・サービス・ユーティリティなど
+                ロジックのファイルは段数に関係なく最後までたどる
 
 対応:
-  ファイルベース: Next.js(app / pages), Nuxt(pages), Remix / React Router v7(app/routes)
-  設定ベース:     React Router(<Route> / createBrowserRouter), Vue Router(routes 配列), TanStack Router(createFileRoute)
+  ファイルベース: Next.js(app / pages), Nuxt(pages), Remix / React Router v7(app/routes), SvelteKit(src/routes)
+  設定ベース:     React Router(<Route> / createBrowserRouter), Vue Router(routes 配列), TanStack Router(createFileRoute),
+                  Angular(Routes 配列。templateUrl の HTML もたどる)
 解析は正規表現による近似。結果は候補なので、必ず実コードで確認すること。
 """
 import json
@@ -25,7 +27,7 @@ SKIP_DIRS = {
     ".svelte-kit", "coverage", "out", "public", "storybook-static",
 }
 TEST_HINT = re.compile(r"(^|/)(tests?|spec|__tests__|__mocks__|e2e|cypress|playwright)(/|$)|\.(test|spec|stories)\.\w+$")
-SRC_EXT = (".tsx", ".ts", ".jsx", ".js", ".mjs", ".vue", ".mdx")
+SRC_EXT = (".tsx", ".ts", ".jsx", ".js", ".mjs", ".cjs", ".vue", ".svelte", ".mdx")
 PAGE_EXT = r"(?:tsx|ts|jsx|js|mdx)"
 
 # 画面ファイル内で拾う事実: 種別 → 正規表現
@@ -36,26 +38,34 @@ FACTS = [
         r"\b\w*[Aa]pi\w*\.(?:get|post|put|patch|delete)\(|\btrpc\.[\w.]+\.(?:useQuery|useMutation|query|mutate)\b|"
         r"\bgetServerSideProps\b|\bgetStaticProps\b|\bgetStaticPaths\b|"
         r"export\s+(?:async\s+)?(?:function|const)\s+(?:loader|action|clientLoader|clientAction)\b|"
-        r"['\"]use server['\"]|\bgql`|\bgraphql\(")),
+        r"['\"]use server['\"]|\bgql`|\bgraphql\(|\bthis\.http\.(?:get|post|put|patch|delete)\(|"
+        r"export\s+(?:async\s+)?(?:function|const)\s+load\b")),
     ("guard", re.compile(
         r"\bdefinePageMeta\(|\bmiddleware\s*:|\bbeforeEnter\b|\bbeforeEach\(|\buseSession\(|\bgetServerSession\(|"
         r"\bauth\(\)|\bRequireAuth\b|\bProtectedRoute\b|\bcanActivate\b|\bisAdmin\b|\bhasRole\(|\bhasPermission\(|"
         r"\bredirect\(\s*['\"`]/(?:login|signin|sign-in)")),
     ("form", re.compile(
         r"<(?:form|Form|input|Input|select|Select|textarea|Textarea|Checkbox|Radio\w*|Switch|DatePicker|Field|FormField|FormItem|el-form|v-form|v-text-field)\b|"
-        r"\bv-model\b|\buseForm\(|\bregister\(\s*['\"]|\bFormData\(")),
+        r"\bv-model\b|\buseForm\(|\bregister\(\s*['\"]|\bFormData\(|\bbind:value\b|\[\(ngModel\)\]|\bformControlName=|\[formGroup\]")),
     ("validation", re.compile(
         r"\bz\.object\(|\byup\.object\(|\bv\.object\(|\brules\s*[:=]|\bresolver\s*:|\brequired(?:=|:|\b(?=\s*[/>]))|"
         r"\b(?:minLength|maxLength|min|max|pattern)(?:=|:)|\.refine\(|\bvalidate\w*\(")),
     ("action", re.compile(
-        r"\bon(?:Click|Submit|Change|Blur)=\{|@(?:click|submit|change|input)(?:\.\w+)*=\"|\bv-on:(?:click|submit)")),
+        r"\bon(?:Click|Submit|Change|Blur)=\{|@(?:click|submit|change|input)(?:\.\w+)*=\"|\bv-on:(?:click|submit)|"
+        r"\bon:(?:click|submit|change|input)\b|\bon(?:click|submit|change)=\{|\((?:click|submit|ngSubmit|change)\)=")),
     ("navigation", re.compile(
         r"\brouter\.(?:push|replace|back|go)\(|\bnavigate\(|\bnavigateTo\(|\bredirect\(|\bpermanentRedirect\(|\bnotFound\(|"
-        r"<(?:Link|NuxtLink|RouterLink|router-link|Navigate)\b|\bhref=[\"'{]\s*[`'\"]?/|\bwindow\.location")),
+        r"<(?:Link|NuxtLink|RouterLink|router-link|Navigate)\b|\bhref=[\"'{]\s*[`'\"]?/|\bwindow\.location|"
+        r"\bgoto\(|\brouter\.navigate(?:ByUrl)?\(|\brouterLink=")),
     ("condition", re.compile(
         r"\bv-(?:if|else-if|else|show)\b|\{\s*!?[\w.?]+\s*&&\s*\(?\s*<|\?\s*\(?\s*<[A-Za-z]|"
         r"\bif\s*\(\s*!?\s*(?:is)?(?:Loading|loading|Pending|pending|isFetching|error|isError|data|items|list)\b|"
-        r"<Suspense\b|\bErrorBoundary\b|\bfallback=|\.length\s*===?\s*0|<(?:template\s+)?#(?:fallback|empty|error)")),
+        r"<Suspense\b|\bErrorBoundary\b|\bfallback=|\.length\s*===?\s*0|<(?:template\s+)?#(?:fallback|empty|error)|"
+        r"\{#(?:if|each|await)\b|\{:(?:else|then|catch)\b|\*ng(?:If|For)=|@(?:if|for|switch|empty|defer)\b")),
+    ("logic", re.compile(
+        r"\b(?:computed|useMemo|useReducer|createMachine|derived|createSelector|createMemo)\s*(?:<[^()]*>)?\(|\$derived\(|"
+        r"\bMath\.(?:round|floor|ceil|trunc)\(|\.toFixed\(|\.reduce\(|\bIntl\.(?:NumberFormat|DateTimeFormat)\b|"
+        r"\.toLocale(?:Date)?String\(|\b(?:format|parse)(?:ISO)?\(\s*\w+\s*,\s*['\"]|^\s*\$:\s")),
     ("store", re.compile(
         r"\buse(?:App)?Selector\(|\buse(?:App)?Dispatch\(|\bdefineStore\(|\buse\w+Store\(|\buseAtom\w*\(|"
         r"\buseRecoil\w*\(|\buseContext\(|\buseState\(\s*['\"]|\bprovide\(|\binject\(")),
@@ -66,17 +76,17 @@ FACTS = [
 FACT_LABEL = {
     "api": "データ取得・API", "guard": "ガード・権限", "form": "フォーム・入力", "validation": "バリデーション",
     "action": "操作(イベントハンドラ)", "navigation": "画面遷移", "condition": "状態分岐(表示条件)",
-    "store": "状態管理", "text": "見出し・タイトル・文言キー",
+    "logic": "派生値・計算・整形", "store": "状態管理", "text": "見出し・タイトル・文言キー",
 }
 
 IMPORT_RX = re.compile(r"""(?:import\s[^'"]*?from\s*|import\s*\(\s*|require\(\s*|export\s[^'"]*?from\s*)['"]([^'"]+)['"]""")
 NAMED_IMPORT_RX = re.compile(r"""import\s+(?:(\w+)\s*,?\s*)?(?:\{([^}]*)\})?\s*from\s*['"]([^'"]+)['"]""")
 NAV_TARGET_RX = re.compile(
-    r"""(?:\.(?:push|replace)|\bnavigate|\bnavigateTo|\bredirect|\bpermanentRedirect)\(\s*[`'"](/[^`'"\s]*)[`'"]|"""
-    r"""(?:\bhref|\bto|:to)=\{?\s*[`'"](/[^`'"\s]*)[`'"]|\blocation(?:\.href)?\s*=\s*[`'"](/[^`'"\s]*)[`'"]""")
+    r"""(?:\.(?:push|replace)|\bnavigate|\bnavigateTo|\bnavigateByUrl|\bredirect|\bpermanentRedirect|\bgoto)\(\s*\[?\s*[`'"](/[^`'"\s]*)[`'"]|"""
+    r"""(?:\bhref|\bto|:to|\brouterLink)=\{?\s*[`'"](/[^`'"\s]*)[`'"]|\blocation(?:\.href)?\s*=\s*[`'"](/[^`'"\s]*)[`'"]""")
 CONFIG_FILE_HINT = re.compile(
     r"createBrowserRouter|createHashRouter|createMemoryRouter|createRoutesFromElements|<Routes\b|useRoutes\(|"
-    r"createRouter\(|RouteRecordRaw|new\s+VueRouter|createFileRoute\(|createRootRoute|RouterModule")
+    r"createRouter\(|RouteRecordRaw|new\s+VueRouter|createFileRoute\(|createRootRoute|RouterModule|:\s*Routes\s*=|provideRouter\(")
 ROUTE_JSX_RX = re.compile(r"""<Route\b[^>]*?\bpath=\{?\s*['"`]([^'"`]*)['"`]""")
 ROUTE_OBJ_RX = re.compile(r"""\bpath\s*:\s*['"`]([^'"`]*)['"`]""")
 ROUTE_FILE_RX = re.compile(r"""\bcreateFileRoute\(\s*['"`]([^'"`]+)['"`]""")
@@ -130,8 +140,10 @@ def frameworks_of(deps):
         fw.add("nuxt")
     if deps & {"@remix-run/react", "@remix-run/dev", "@react-router/dev"}:
         fw.add("remix")
+    if "@sveltejs/kit" in deps:
+        fw.add("sveltekit")
     if not deps:  # package.json が無い/読めない場合は規約を全部試す
-        fw |= {"next", "nuxt", "remix"}
+        fw |= {"next", "nuxt", "remix", "sveltekit"}
     return fw
 
 
@@ -149,6 +161,9 @@ def next_segment(seg):
     m = re.fullmatch(r"\[\[\.\.\.(\w+)\]\]", seg)
     if m:
         return f"*{m.group(1)}?"
+    m = re.fullmatch(r"\[\[(\w+)\]\]", seg)
+    if m:
+        return f":{m.group(1)}?"
     m = re.fullmatch(r"\[\.\.\.(\w+)\]", seg)
     if m:
         return f"*{m.group(1)}"
@@ -209,6 +224,13 @@ def file_routes(root, files, pkgs):
                     segs = [s for s in m.group(1).split("/") if s != "index"]
                     screens.append(screen(join_route([next_segment(s) for s in segs]), rel, "nuxt"))
                     continue
+            if "sveltekit" in fw:
+                m = re.fullmatch(r"src/routes/(?:(.*)/)?\+page\.svelte", sub)
+                if m:
+                    segs = (m.group(1) or "").split("/")
+                    route = join_route([next_segment(x) for x in segs if x])
+                    screens.append(screen(route, rel, "sveltekit", extras=sveltekit_extras(files, rel)))
+                    continue
             if "remix" in fw:
                 m = re.fullmatch(r"app/routes/([^/]+?)(?:/route)?\.(?:tsx|ts|jsx|js)", sub)
                 if m:
@@ -230,6 +252,21 @@ def next_app_extras(files, page_rel):
                 if p in fileset:
                     extras.append(f"{name}: {p}")
         if not d or os.path.basename(d) == "app":
+            break
+        d = os.path.dirname(d)
+    return extras
+
+
+def sveltekit_extras(files, page_rel):
+    """+page.svelte と同じ階層の load 関数・祖先の +layout / +error(状態の手がかり)"""
+    fileset = set(files)
+    d = os.path.dirname(page_rel)
+    extras = [f"load: {d}/{n}" for n in ("+page.ts", "+page.js", "+page.server.ts", "+page.server.js") if f"{d}/{n}" in fileset]
+    while True:
+        for n in ("+layout.svelte", "+error.svelte"):
+            if f"{d}/{n}" in fileset:
+                extras.append(f"{n[1:-7]}: {d}/{n}")
+        if not d or os.path.basename(d) == "routes":
             break
         d = os.path.dirname(d)
     return extras
@@ -354,7 +391,22 @@ def nuxt_auto_imports(files, pkgs):
     return comps, funcs
 
 
-def collect_facts(root, start, files, follow, auto):
+LOGIC_PATH = re.compile(r"(^|/)(hooks|composables|stores?|contexts?|providers?|state|services?|utils?|helpers?|lib|domain|models?)/|(^|/)use[A-Z]\w*\.\w+$")
+
+
+def is_logic_file(rel):
+    if rel.endswith(".d.ts"):
+        return False
+    return rel.endswith((".ts", ".js", ".mjs", ".cjs")) or bool(LOGIC_PATH.search(rel))
+
+
+def companion_files(meta):
+    """画面と組で動くファイル(SvelteKit の load、Next.js の loading / error / not-found)"""
+    keys = ("load:", "loading:", "error:", "not-found:")
+    return [e.split(": ", 1)[1] for e in (meta or {}).get("extras", []) if e.startswith(keys)]
+
+
+def collect_facts(root, start, files, follow, auto, max_files=200, companions=()):
     fileset = set(files)
     comps, funcs = auto
     func_idx = {}
@@ -364,16 +416,31 @@ def collect_facts(root, start, files, follow, auto):
             if m:
                 func_idx[m.group(1)] = rel
     visited = {start: 0}
-    queue = [start]
+    visited.update({c: 1 for c in companions if c != start})
+    used = defaultdict(set)  # ファイル → import された名前("*" は全部)
+    queue = [start] + [c for c in companions if c != start]
     order = []
-    while queue:
+    while queue and len(order) < max_files:
         rel = queue.pop(0)
         order.append(rel)
         depth = visited[rel]
-        if depth >= follow:
+        if depth >= follow and not is_logic_file(rel):
             continue
         body = "".join(read_lines(root, rel))
-        nexts = [resolve_import(rel, s, fileset) for s in IMPORT_RX.findall(body)]
+        nexts = []
+        for spec in IMPORT_RX.findall(body):
+            nexts.append(resolve_import(rel, spec, fileset))
+        for m in NAMED_IMPORT_RX.finditer(body):
+            default, named, spec = m.groups()
+            t = resolve_import(rel, spec, fileset)
+            if t:
+                if default:
+                    used[t].add("*")
+                used[t] |= {n.strip().split(" as ")[0].strip() for n in (named or "").split(",") if n.strip()}
+        # Angular: コンポーネントの templateUrl(HTML テンプレート)
+        for url in re.findall(r"templateUrl\s*:\s*['\"]([^'\"]+)['\"]", body):
+            t = os.path.normpath(os.path.join(os.path.dirname(rel), url)).replace(os.sep, "/")
+            nexts.append(t if t in fileset else None)
         if comps:
             for tag in re.findall(r"<([A-Z]\w*|[a-z]+(?:-[a-z]+)+)\b", body):
                 name = pascal(tag)
@@ -390,11 +457,21 @@ def collect_facts(root, start, files, follow, auto):
     facts = defaultdict(list)
     for rel in order:
         lines = read_lines(root, rel)
+        names = used.get(rel, set())
+        # GraphQL 定義ファイルのように export が並ぶファイルは、import された名前の定義だけを見る
+        only = names if names and "*" not in names and rel != start else None
+        current = None
         # const nav = useNavigate() のような別名の遷移関数
         aliases = set(re.findall(r"\b(?:const|let)\s+(\w+)\s*=\s*use(?:Navigate|Router)\(\)", "".join(lines)))
         aliases -= {"navigate", "router"}
         alias_rx = re.compile(rf"\b(?:{'|'.join(aliases)})(?:\.(?:push|replace))?\(\s*[`'\"](/[^`'\"\s]*)") if aliases else None
         for no, line in enumerate(lines, 1):
+            if only is not None:
+                m = re.match(r"(export\s+)?(?:default\s+)?(?:async\s+)?(?:const|let|function|class)\s+(\w+)", line)
+                if m:
+                    current = m.group(2) if m.group(1) else None
+                if current and current not in only:
+                    continue
             extra = alias_rx.findall(line) if alias_rx else []
             for kind, rx in FACTS:
                 if rx.search(line) or (kind == "navigation" and extra):
@@ -438,7 +515,7 @@ def transitions(root, screens, files, follow, auto):
     edges = defaultdict(list)
     unresolved = []
     for s in pages:
-        _, _, facts = collect_facts(root, s["file"], files, follow, auto)
+        _, _, facts = collect_facts(root, s["file"], files, follow, auto, companions=companion_files(s))
         for f in facts.get("navigation", []):
             for t in f["targets"]:
                 hits = [d for d, rx in compiled if rx.match(t)]
@@ -499,7 +576,7 @@ def main():
         if not start:
             print(f"画面が見つからない: {key}。ルート(例 /users/:id)かファイルパスを指定すること。", file=sys.stderr)
             sys.exit(1)
-        order, visited, facts = collect_facts(root, start, files, follow, auto)
+        order, visited, facts = collect_facts(root, start, files, follow, auto, companions=companion_files(meta))
         if as_json:
             print(json.dumps({"screen": meta, "files": [{"file": f, "depth": visited[f]} for f in order],
                               "facts": facts}, ensure_ascii=False, indent=2))
